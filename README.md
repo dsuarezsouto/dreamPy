@@ -1,0 +1,11 @@
+## Motivation
+The catalogue of different sleep disorders is one of the main problems that medicine faces today. The percentage of people suffering from any of these disorders is 31% in Western Europe, 56% in the USA and 23% in Japan. However, it is estimated that only some these people are following some form of medical treatment. Nowadays, social networks have be- come platforms used by millions of users who communicate with each other. This also makes them a valuable source of what is known as Social Data, which is all information that social network users share publicly, including metadata such as user location, spoken language, biographical data and/or shared links. In this project we have analysed information shared by Spanish-speaking users about insomnia on the social network Twitter.
+
+## Objective
+Our objective has been to develop a machine learning classifier that is capable of clas- sifying messages related to insomnia and a second classifier that is capable of classifying these messages into 5 different themes according to the type of information they contain.
+To develop these classifiers, we built a dataset with tweets containing the word ”insom- nia” to be published between December 14 and January 4, 2018.
+
+## Results
+From this dataset, we conducted a geographical study of which we concluded that the Spanish-speaking countries with the most tweets on insomnia are Argentina, Mexico and Spain, specifically Spain, with the data collected, we have been able to estimate that approximately 1.21% of users in this country have ever written about insomnia. Another conclusion we came to with this dataset is that there is a big difference in the proportion of users who have the symptom of Difficulty at the beginning of sleep compared to the other two symptoms of Short sleep duration and Difficulty sleeping and low energy during the day, all defined by the ICSD-3.
+The algorithm that gave us the best results when training the insomnia classifier and the theme classifier was Logistic Regression with a Accuracy and a F1 score of 0.84, 0.82 and 0.75, 0.72 respectively.
+Finally we developed a monitoring service on insomnia that allows you to visualize the analysis of themes, sentiments and emotions made through Senpy of the captured tweets.

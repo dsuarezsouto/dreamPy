@@ -1,0 +1,340 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/elements/google-chart-elasticsearch/google-chart.html">
+<link rel="import" href="/bower_components/happymap-element/happymap-element.html">
+<link rel="import" href="/elements/material-search/material-search.html">
+<link rel="import" href="/elements/tweet-chart-master/tweet-chart.html">
+<link rel="import" href="/elements/number-chart-master/number-chart.html">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+<dom-module id="demo-dashboard">
+
+  <link rel="import" type="css" href="demo-dashboard.css">
+  <link rel="import" href="/styles/app-theme.html" type="css">
+  <link rel="import" href="/styles/main.css" type="css">
+
+  <template>
+    <iron-ajax auto
+        url="queries.json"
+        handle-as="json"
+        last-response="{{queries}}">
+      
+    </iron-ajax>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-content: center;width: 100%;margin-bottom: -50px;margin-top: 20px;">
+      <div class="top">
+        <img src="img/dreampylogo.png" style="object-fit: cover;">
+      </div>
+    </div>
+
+  
+    <iron-pages selected="{{selected}}" style="margin-bottom: 35px; padding-top: 48px;" >
+      <div>
+      <material-search active=True search-value="{{query}}"></material-search>
+      <div class="row" style="height: 570px; overflow: hidden;margin-top: 15px;">
+        <div class="col-md-6">
+          <number-chart 
+              data="{{data}}"
+              filters="{{filters}}"
+              aggkey="theme"
+              title="Sleep disorder"
+              icon="img/sleep.svg"
+              subtitle="Total"
+              stylebg="bg-red"
+              object="0">
+          </number-chart>
+          <number-chart 
+              data="{{data}}"
+              filters="{{filters}}"
+              aggkey="theme"
+              title="Sleep disorder and causes"
+              icon="img/notepad.svg"
+              subtitle="Total"
+              stylebg="bg-yellow"
+              object="1">
+          </number-chart>
+          <number-chart 
+              data="{{data}}"
+              filters="{{filters}}"
+              aggkey="theme"
+              title="Sleep disorder and asking for help"
+              icon="img/pharmacist.svg"
+              subtitle="Total"
+              stylebg="bg-green"
+              object="2">
+          </number-chart>
+           <number-chart 
+              data="{{data}}"
+              filters="{{filters}}"
+              aggkey="theme"
+              title="Sleep disorder and the activity doing at night"
+              icon="img/man-reading.svg"
+              subtitle="Total"
+              stylebg="bg-aqua"
+              object="3">
+          </number-chart>
+          <number-chart 
+            data="{{data}}"
+            filters="{{filters}}"
+            aggkey="theme"
+            icon="img/medicine.svg "
+            title="Sleep disorder and the remedy taken"
+            subtitle="Total"
+            stylebg="bg-orange"
+            object="4">
+          </number-chart>
+        </div>
+        <div class="col-md-6" style="height: 100%;overflow: hidden;">
+          <div style="margin-bottom: 15px">
+            <google-chart 
+                data="{{data}}"
+                field="sentiment.marl:hasPolarity"
+                type='column'
+                filters="{{filters}}"
+                icon='social:mood'
+                param='{{param}}'
+                options='{"title": "Sentiments"}'
+                cols='[{"label": "sentiment.marl:hasPolarity", "type": "string"},{"label": "Count", "type": "number"}]' '<!-- visalized data in case of connection error -->'
+            </google-chart>
+          
+          </div>
+          <google-chart
+              data="{{data}}"
+              field="emotion"
+              type='pie'
+              filters="{{filters}}"
+              icon='social:mood'
+              param='{{param}}'
+              options='{"title": "Emotions"}'
+              cols='[{"label": "emotion", "type": "string"},{"label": "Count", "type": "number"}]' '<!-- visalized data in case of connection error -->'
+          </google-chart>
+        </div>
+      </div>
+      
+      <div class="row">
+     
+        <div class="col-md-6 pull-right" class="map" style="margin-top: 15px;">
+          <tweet-chart
+            datos="{{data}}"   
+            icon='icons:list'>
+          </tweet-chart>
+        </div>
+        <div class="col-md-6" style="margin-top: 15px;">
+          <div class="top_bar_happy_map">
+      
+            <iron-icon icon="maps:place" class="style-scope dashboard-somedi x-scope iron-icon-1">>
+            </iron-icon>
+        
+            
+            <span class="style-scope google-chart">Geolocation of the tweets</span>
+          </div>
+
+          <happymap-element
+              data="[[getPlaces(data)]]",
+              '<!-- visalized data in case of connection error -->'
+          </happymap-element>
+        </div>
+      </div>
+
+      </div>
+      
+      
+      
+    </iron-pages>
+
+
+  <div class="footer">
+    <img class="gsi_logo" src="img/gsi_blanco.svg">
+  </div>
+  
+
+
+  </template>
+
+  <script>
+  var ready = false;
+    Polymer({
+      is: 'demo-dashboard',
+      properties: {
+        selected: {
+          type: Number,
+          value: 0
+        }, 
+
+        ids:{
+          type: Array
+          /*value: ["481","482","32512","32420","91963","96677","160677","131425","322429","322612"]*/
+           
+        },
+        data:{
+          type: Object
+        },
+        client: {
+          type: Object,
+          notify: true,
+          observer: '_clientChanged'              
+        },
+        fields: {
+          type: Array,
+          value: function() { return []; }
+        },
+
+        places: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+
+        filters: {
+          type: Array,
+          notify: true,
+          value: function() { return []; }
+        }
+      },
+    
+      observers: [
+      '_filtersChange(filters.*)'
+      ],
+      behaviors: [
+        Polymer.IronA11yKeysBehavior
+      ],
+      keyBindings: {
+        'enter': '_search'
+      },
+
+
+      ready: function(){
+        console.log("ready");
+      },
+      
+      addPlace: function(event) {
+        this.set('places', this.places.concat(event.detail.response))
+        console.log(this.places)
+      },
+      
+      getName: function(id) {
+        return "http://tour-pedia.org/api/getPlaceDetails?id=" + id
+      },
+      getPlaces: function(data){
+        var places = []
+        var lat=0.0
+        var long=0.0
+        data.hits.hits.forEach( function (entry){
+            lat=entry._source.lat
+            long=entry._source.long
+            places.push({'lat': lat, 'lon':long})
+            }
+        )
+        
+        return places
+      },
+      getPoints: function(f) {
+        return f.base;
+      },
+
+      _clientChanged: function() {
+        console.log("ClientChanged");
+        ready = true;
+        this._query();
+      },
+      _filtersChange: function() {
+        this._query();
+       },
+       _search: function(){
+        //console.log("search fired")
+        //console.log(this.query.length)
+        if (this.query.length == 0){
+          //console.log("default search fired")
+          this.filters = [];
+          this._query()
+        }
+        else {
+          this.push('filters', {terms: {'text': [this.query]}});
+          this._query()
+        }
+      },
+       _query: function() {
+        console.log("_filtersChangedash")
+        var that = this;
+        console.log("Ready?: ", ready);
+        if(ready){
+          this.client.search({
+          // undocumented params are appended to the query string
+          index: "tweetsinsomnio",
+          type: "tweet",
+          body: {
+            size: 300,
+            query: {
+              bool: {
+                must: this.filters,
+              }
+            },
+            aggs: {
+              theme: {
+                terms: {
+                  field: "theme.keyword",
+                  order: {
+                    _count: "desc"
+                  }
+                }
+              },
+              'sentiment.marl:hasPolarity': {
+                terms: {
+                  field: "sentiment.marl:hasPolarity.keyword",
+                  order: {
+                    _count: "desc"
+                  }
+                }
+              },
+              lat: {
+                terms: {
+                  field: "lat",
+                  order: {
+                    _count: "desc"
+                  }
+                }
+              },
+              long: {
+                terms: {
+                  field: "long",
+                  order: {
+                    _count: "desc"
+                  }
+                }
+              },
+              emotion: {
+                terms: {
+                  field: "emotion.keyword",
+                  order: {
+                    _count: "desc"
+                  }
+                }
+              }
+            }      
+          }
+          }).then(function (resp) {
+            var myids = []
+            resp.hits.hits.forEach(function(entry){myids.push(entry._id)})
+            that.ids = myids;
+            //console.log(that.ids)
+            that.data = resp;
+            //console.log("DATA: "+that.data)
+            
+            });
+        }
+      }
+    });
+  </script>
+
+</dom-module>
